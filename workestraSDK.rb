@@ -1,4 +1,4 @@
-
+"""
  Copyright (c) 2014 Workestra LLC
  All rights reserved.
 
@@ -26,3 +26,61 @@
  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+"""
+
+#file: workestraSDK.rb
+
+# -*- encoding: utf-8 -*-
+require 'json'
+require 'net/http'
+require 'open-uri'
+require 'openssl'
+
+module Workestra
+	class SDK
+		@@SDK_ID = "rails"
+		@@basicAuthUsername = ""
+		@@basicAuthPassword = ""
+		@@endpoint = 'https://www.workestra.co/api/v1'
+
+
+		def initialize()
+			
+			return self
+		end
+
+		def setBasicAuth(username, password)
+		    @@basicAuthUsername = username
+		    @@basicAuthPassword = password
+		end
+
+		def set_api_key(key)
+		    @@basicAuthUsername = key
+		    @@basicAuthPassword = "w"
+		    return self
+		end
+
+		def listNotifications
+    	    url = @@endpoint + "/notifications"
+
+    	    uri = URI.parse(url)
+
+    	    http = Net::HTTP.new(uri.host,uri.port)
+
+    	    http.use_ssl = true
+			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+			req = Net::HTTP::Get.new(uri.request_uri)
+
+			req.basic_auth @@basicAuthUsername, @@basicAuthPassword
+
+    	    response = http.request(req)
+
+    	    return response
+  
+      	end
+
+
+
+	end
+end
